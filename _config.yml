@@ -2,6 +2,7 @@ safe: true
 markdown: kramdown
 kramdown:
     input: GFM
+    syntax_highlighter: rouge
 highlighter: rouge
 permalink: /:title.html
 relative_permalinks: false
