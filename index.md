@@ -73,7 +73,9 @@ var counter =
     up.map(1).merge(down.map(-1))
     // accumulate sum
     .scan(0, function(x,y) { return x + y })
-    .subscribe(function(total){$('#counter').text(total);});
+    .subscribe(function(total){
+       $('#counter').text(total);
+     });
 ```
 
 ## ![](pictures/logo.svg)
