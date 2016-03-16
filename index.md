@@ -20,7 +20,7 @@ style: |
         left: initial;
         top: 40%;
     }
-    #elm-counter pre code {
+    .slide pre code {
         font-size: 0.9em;
         line-height: initial;
     }
@@ -165,9 +165,14 @@ main =
 ## elm-make
 
 ```bash
-elm-make Main.elm                     # compile to HTML in index.html
-elm-make Main.elm --output main.html  # compile to HTML in main.html
-elm-make Main.elm --output elm.js     # compile to JS in elm.js
+# compile to HTML in index.html
+elm-make Main.elm
+
+# compile to HTML in main.html
+elm-make Main.elm --output main.html
+
+# compile to JS in elm.js
+elm-make Main.elm --output elm.js
 ```
 
 ## elm-package.json {#elm-json}
