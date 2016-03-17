@@ -109,6 +109,100 @@ view address model =
     ]
 ```
 
+## **Haskell-like syntax**
+
+## Literals
+
+| JavaScript                 | Elm                    |
+|----------------------------|------------------------|
+| 3.1415                     | 3.1415                 |
+| "Hello world!"             | "Hello world!"         |
+| \`multiline string\` (ES6) | """multiline string""" |
+| 'Hello world!'             | &empty;                |
+| &empty;                    | 'a'                    |
+| true                       | True                   |
+| [1,2,3]                    | [1,2,3]                |
+
+## Objects / Records
+
+| JavaScript     | Elm                 |
+|----------------+---------------------|
+| { x: 3, y: 4 } | { x = 3, y = 4 }    |
+| point.x        | point.x             |
+| point.x = 42   | { point \| x = 42 } |
+
+
+## Types
+
+```elm
+fortyTwo : Int
+fortyTwo =
+  42
+
+names : List String
+names =
+  [ "Alice", "Bob", "Chuck" ]
+
+book : { title: String, author: String, pages: Int }
+book =
+  { title = "Demian", author = "Hesse", pages = 176 }
+```
+
+
+## Types !
+
+```elm
+type Scale = Normal | Logarithmic
+
+type Widget
+    = ScatterPlot (List (Int, Int))
+    | LogData (List String)
+    | TimePlot Scale (List (Time, Int))
+
+type Maybe a = Just a | Nothing
+```
+
+## TYPES !!
+
+```elm
+import String
+
+longestName : List String -> Int
+longestName names =
+  List.maximum (List.map String.length names)
+
+
+isLong : { record | pages : Int } -> Bool
+isLong book =
+  book.pages > 400
+```
+
+## Types !!
+
+```elm
+type alias Model = Int
+type Action = Increment | Decrement
+
+update : Action -> Model -> Model
+view : Signal.Address Action -> Model -> Html
+```
+
+## **TYPES**
+
+## Pattern matching ;)
+
+```elm
+-- String.toInt : String -> Result String Int
+
+toMonth : String -> Maybe Int
+toMonth rawString =
+    case String.toInt rawString of
+      Err message ->
+          Nothing
+      Ok n ->
+          if n > 0 && n <= 12 then Just n else Nothing
+```
+
 
 ## ![](pictures/signal-graph-summary.png)
 {:.cover .h}
@@ -165,6 +259,19 @@ import StartApp.Simple exposing (start)
 
 main =
   start { model = 0, update = update, view = view }
+```
+
+
+
+## Embedding
+
+Include generated elm.js, it exposes a `Elm` object.
+
+```html
+var div = document.getElementById('counter');
+Elm.embed(Elm.Counter, div);
+<!-- or -->
+Elm.fullscreen(Elm.Counter);
 ```
 
 ## **JS interop**
@@ -229,18 +336,7 @@ myapp.ports.requestUser.unsubscribe(databaseLookup);
 ```no-highlight
 elm-make Main.elm
 elm-make Main.elm --output elm.js
-```
 
-### Embedding
-```html
-var div = document.getElementById('counter');
-Elm.embed(Elm.Counter, div);
-<!-- or -->
-Elm.fullscreen(Elm.Counter);
-```
-
-### Both
-```no-highlight
 elm-make Main.elm --output main.html
 ```
 
