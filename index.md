@@ -9,10 +9,6 @@ style: |
     .slide.cover {
         background-color: white;
     }
-    #Cover, #js {
-        position: relative;
-    }
-
     #Cover p img {
         width: 20%;
         position: absolute;
@@ -43,7 +39,7 @@ style: |
 ## ![](pictures/baconjs.png)
 {:.cover .h}
 
-## Counter example
+## Example
 
 ```javascript
 var up   = $('#up').asEventStream('click');
@@ -53,7 +49,7 @@ var counter =
     // map up to 1, down to -1
     up.map(1).merge(down.map(-1))
     // accumulate sum
-    .scan(0, function(x,y) { return x + y });
+    .scan(0, ((x,y) => x + y));
 
 // assign observable value to jQuery property text
 counter.assign($('#counter'), 'text');
@@ -62,7 +58,7 @@ counter.assign($('#counter'), 'text');
 ## ![](pictures/rxjs.png)
 {:.cover .h}
 
-## Counter example
+## Example
 
 ```javascript
 var up   = Rx.Observable.fromEvent($('#up'),'click');
@@ -72,10 +68,9 @@ var counter =
     // map up to 1, down to -1
     up.map(1).merge(down.map(-1))
     // accumulate sum
-    .scan(0, function(x,y) { return x + y })
-    .subscribe(function(total){
-       $('#counter').text(total);
-     });
+    .scan(0, ((x,y) => x + y))
+    // subscribe
+    .subscribe((total) => $('#counter').text(total));
 ```
 
 ## ![](pictures/logo.svg)
@@ -89,10 +84,13 @@ var counter =
 - ...**Static types**
 - ...Compiled to JS
 - ... ... with good perfs
+- ... Great tooling
 - ...No runtime exception
 
+## ![](/pictures/runtime-errors-issue.png)
+{:.cover .h}
 
-## Counter example {#elm-counter}
+## Example {#elm-counter}
 
 ```elm
 type alias Model = Int
@@ -114,11 +112,18 @@ view address model =
 ```
 
 
+## ![](pictures/signal-graph-summary.png)
+{:.cover .h}
+
+## ![](pictures/todomvc-benchmark.png)
+{:.cover .h}
+
 ## The elm architecture
 
 - Model
 - Update
 - View
+
 
 ## Model
 
@@ -156,25 +161,89 @@ view address model =
 ## Binding everything together
 
 ```elm
+module Counter where
+
 import StartApp.Simple exposing (start)
 
 main =
   start { model = 0, update = update, view = view }
 ```
 
+## **JS interop**
+
+## **Ports**
+
+## From JavaScript to Elm
+
+```elm
+-- Declaration
+port addUser : Signal (String, UserRecord)
+```
+
+```JavaScript
+// Usage
+myapp.ports.addUser.send([
+  "Tom",
+  { age: 32, job: "lumberjack" }
+]);
+
+```
+
+## From Elm to JavaScript
+
+```elm
+-- Declaration
+port requestUser : Signal String
+port requestUser =
+    signalOfUsersWeWantMoreInfoOn
+```
+
+```JavaScript
+// Usage
+myapp.ports.requestUser.subscribe(databaseLookup);
+
+function databaseLookup(user) {
+    var userInfo = database.lookup(user);
+    myapp.ports.addUser.send(user, userInfo);
+}
+
+// Unsubscribe
+myapp.ports.requestUser.unsubscribe(databaseLookup);
+```
+
+## Customs and border protection
+
+- Booleans and Strings – both exist in Elm and JS!
+- Numbers – Elm ints and floats correspond to JS numbers
+- Lists, Arrays – correspond to JS arrays
+- Tuples – correspond to fixed-length, mixed-type JS arrays
+- Records – correspond to JavaScript objects
+- Signals – correspond to event streams in JS
+- Maybes – `Nothing` and `Just 42` correspond to `null` and `42`
+- Json – Json.Encode.Value corresponds to arbitrary JSON
+
+
 ## **Tooling**
 
 ## elm-make
 
-```bash
-# compile to HTML in index.html
+### Compiling
+```no-highlight
 elm-make Main.elm
-
-# compile to HTML in main.html
-elm-make Main.elm --output main.html
-
-# compile to JS in elm.js
 elm-make Main.elm --output elm.js
+```
+
+### Embedding
+```html
+var div = document.getElementById('counter');
+Elm.embed(Elm.Counter, div);
+<!-- or -->
+Elm.fullscreen(Elm.Counter);
+```
+
+### Both
+```no-highlight
+elm-make Main.elm --output main.html
 ```
 
 ## elm-package.json {#elm-json}
@@ -182,7 +251,7 @@ elm-make Main.elm --output elm.js
 ```json
 {
     "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
+    "summary": "helpful summary of your project",
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
@@ -200,8 +269,10 @@ elm-make Main.elm --output elm.js
 
 ## elm-package
 
-```bash
+```no-highlight
 elm-package install evancz/elm-html
+
+elm-package install
 
 elm-package publish
 ```
@@ -215,6 +286,7 @@ elm-package publish
 - Programmatically enforce SemVer
 
 ## **Types FTW**
+
 
 ## **elm-lang.org/try**
 
