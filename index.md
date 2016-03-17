@@ -1,7 +1,5 @@
 ---
-
 layout: ribbon
-
 style: |
     .slide:after {
         display: none;
@@ -87,7 +85,7 @@ var counter =
 - ... Great tooling
 - ...No runtime exception
 
-## ![](/pictures/runtime-errors-issue.png)
+## ![](pictures/runtime-errors-issue.png)
 {:.cover .h}
 
 ## Example {#elm-counter}
